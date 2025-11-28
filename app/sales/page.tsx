@@ -26,7 +26,7 @@ async function getSales() {
   if (!sales) return []
 
   // Obtener IDs únicos de usuarios
-  const userIds = [...new Set(sales.map(sale => sale.user_id).filter(Boolean))]
+  const userIds = Array.from(new Set(sales.map(sale => sale.user_id).filter(Boolean)))
   
   // Obtener información de usuarios
   const { data: users } = await supabase
