@@ -21,7 +21,9 @@
     "address": "Address",
     "currency": "Currency",
     "language": "Language",
-    "logout": "Logout"
+    "logout": "Logout",
+    "clear": "Clear",
+    "confirmDelete": "Are you sure you want to delete {name}?"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -138,6 +140,7 @@
     "totalSpent": "Total Spent",
     "noSales": "No sales registered",
     "confirmDelete": "Are you sure you want to delete {name}?",
+    "confirmDeleteDescription": "Are you sure you want to deactivate {name}? This action cannot be undone.",
     "customerDeleted": "Customer deleted successfully",
     "errorDeleting": "Error deleting customer",
     "errorSearching": "Error searching customers",
@@ -331,7 +334,9 @@
     "insufficientCash": "Insufficient cash",
     "searchCustomer": "Search customer by name, email or phone",
     "discount": "Discount",
-    "discountAvailable": "Discount available"
+    "discountAvailable": "Discount available",
+    "points": "points",
+    "noCustomersFound": "No customers found"
   },
   "errors": {
     "userNotFound": "User not found",

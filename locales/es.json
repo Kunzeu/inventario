@@ -21,7 +21,9 @@
     "address": "Dirección",
     "currency": "Moneda",
     "language": "Idioma",
-    "logout": "Salir"
+    "logout": "Salir",
+    "clear": "Limpiar",
+    "confirmDelete": "¿Estás seguro de que deseas eliminar a {name}?"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -138,6 +140,7 @@
     "totalSpent": "Total Gastado",
     "noSales": "No hay ventas registradas",
     "confirmDelete": "¿Estás seguro de que deseas eliminar a {name}?",
+    "confirmDeleteDescription": "¿Estás seguro de que deseas desactivar a {name}? Esta acción no se puede deshacer.",
     "customerDeleted": "Cliente eliminado exitosamente",
     "errorDeleting": "Error al eliminar el cliente",
     "errorSearching": "Error al buscar clientes",
@@ -331,7 +334,9 @@
     "insufficientCash": "Efectivo insuficiente",
     "searchCustomer": "Buscar cliente por nombre, email o teléfono",
     "discount": "Descuento",
-    "discountAvailable": "Descuento disponible"
+    "discountAvailable": "Descuento disponible",
+    "points": "puntos",
+    "noCustomersFound": "No se encontraron clientes"
   },
   "errors": {
     "userNotFound": "Usuario no encontrado",
