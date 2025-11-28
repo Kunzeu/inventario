@@ -15,7 +15,7 @@ export function EmailStatus({ userId, email }: EmailStatusProps) {
   return (
     <ConfirmEmailButton 
       userId={userId} 
-      email={email}
+      userEmail={email}
       isAdmin={isAdmin}
     />
   )
