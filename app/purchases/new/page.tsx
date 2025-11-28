@@ -208,6 +208,7 @@ export default function NewPurchasePage() {
 
       toast.success(t('purchases.purchaseCompleted'))
       router.push('/purchases')
+      router.refresh()
     } catch (error: any) {
       console.error('Error completo en checkout:', error)
       const errorMessage = error?.message || error?.details || JSON.stringify(error) || t('purchases.error')

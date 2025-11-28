@@ -66,6 +66,7 @@ export default function NewStaffPage() {
 
       toast.success(t('staff.employeeAdded'))
       router.push('/staff')
+      router.refresh()
     } catch (error: any) {
       toast.error(error.message || t('staff.error'))
     } finally {

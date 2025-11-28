@@ -35,6 +35,7 @@ export function DeleteStaffButton({ staffId, staffName }: DeleteStaffButtonProps
 
       toast.success(t('staff.employeeDeleted'))
       router.push('/staff')
+      router.refresh()
     } catch (error: any) {
       toast.error(error.message || t('staff.errorDeleting'))
     } finally {

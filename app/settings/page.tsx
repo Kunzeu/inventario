@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { createSupabaseClient } from '@/lib/supabase/client'
 import { MainLayout } from '@/components/layout/main-layout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,6 +12,7 @@ import { Settings as SettingsIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 export default function SettingsPage() {
+  const router = useRouter()
   const { t, i18n } = useTranslation()
   const [company, setCompany] = useState<any>(null)
   const [name, setName] = useState('')
@@ -96,6 +98,7 @@ export default function SettingsPage() {
       }
 
       toast.success(t('settings.saved'))
+      router.refresh()
       loadCompany()
     } catch (error: any) {
       toast.error(error.message || t('settings.error'))

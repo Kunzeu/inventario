@@ -100,6 +100,7 @@ export default function EditSupplierPage() {
 
       toast.success(t('suppliers.supplierUpdated'))
       router.push(`/suppliers/${params.id}`)
+      router.refresh()
     } catch (error: any) {
       toast.error(error.message || t('suppliers.error'))
     } finally {

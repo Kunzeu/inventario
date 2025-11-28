@@ -70,6 +70,7 @@ export default function NewProductPage() {
 
       toast.success(t('products.addProduct') + ' ' + t('common.save'))
       router.push('/products')
+      router.refresh()
     } catch (error: any) {
       toast.error(error.message || 'Error al crear el producto')
     } finally {

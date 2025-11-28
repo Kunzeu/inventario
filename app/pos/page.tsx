@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { createSupabaseClient } from '@/lib/supabase/client'
 import { MainLayout } from '@/components/layout/main-layout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -22,6 +23,7 @@ interface CartItem {
 }
 
 export default function POSPage() {
+  const router = useRouter()
   const { t } = useTranslation()
   const [products, setProducts] = useState<any[]>([])
   const [cart, setCart] = useState<CartItem[]>([])
@@ -268,6 +270,7 @@ export default function POSPage() {
       setCustomerId(null)
       setSelectedCustomer(null)
       setCashReceived('')
+      router.refresh()
       loadProducts()
     } catch (error: any) {
       console.error('Error completo en checkout:', error)

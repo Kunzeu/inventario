@@ -30,6 +30,7 @@ export function DeleteCustomerButton({ customerId, customerName }: { customerId:
 
       toast.success(t('customers.customerDeleted'))
       router.push('/customers')
+      router.refresh()
     } catch (error: any) {
       toast.error(error.message || t('customers.errorDeleting'))
     } finally {

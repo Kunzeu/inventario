@@ -63,6 +63,7 @@ export default function NewSupplierPage() {
 
       toast.success(t('suppliers.supplierAdded'))
       router.push('/suppliers')
+      router.refresh()
     } catch (error: any) {
       toast.error(error.message || t('suppliers.error'))
     } finally {

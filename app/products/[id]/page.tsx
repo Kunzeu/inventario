@@ -105,6 +105,7 @@ export default function EditProductPage() {
 
       toast.success('Producto actualizado exitosamente')
       router.push('/products')
+      router.refresh()
     } catch (error: any) {
       toast.error(error.message || 'Error al actualizar el producto')
     } finally {

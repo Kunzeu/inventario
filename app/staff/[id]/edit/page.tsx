@@ -71,6 +71,7 @@ export default function EditStaffPage() {
 
       toast.success(t('staff.employeeUpdated'))
       router.push('/staff')
+      router.refresh()
     } catch (error: any) {
       toast.error(error.message || t('staff.error'))
     } finally {

@@ -30,6 +30,7 @@ export function DeleteSupplierButton({ supplierId, supplierName }: { supplierId:
 
       toast.success(t('suppliers.supplierDeleted'))
       router.push('/suppliers')
+      router.refresh()
     } catch (error: any) {
       toast.error(error.message || t('suppliers.errorDeleting'))
     } finally {

@@ -62,6 +62,7 @@ export default function NewCustomerPage() {
 
       toast.success(t('customers.customerAdded'))
       router.push('/customers')
+      router.refresh()
     } catch (error: any) {
       toast.error(error.message || t('customers.error'))
     } finally {

@@ -30,6 +30,7 @@ export function DeleteProductButton({ productId, productName }: { productId: str
 
       toast.success(t('products.productDeleted'))
       router.push('/products')
+      router.refresh()
     } catch (error: any) {
       toast.error(error.message || t('products.errorDeleting'))
     } finally {

@@ -97,6 +97,7 @@ export default function EditCustomerPage() {
 
       toast.success(t('customers.customerUpdated'))
       router.push(`/customers/${params.id}`)
+      router.refresh()
     } catch (error: any) {
       toast.error(error.message || t('customers.error'))
     } finally {
