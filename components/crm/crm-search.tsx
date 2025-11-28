@@ -74,8 +74,9 @@ export function CRMSearch({ customers, currency, locale }: CRMSearchProps) {
             {searchTerm ? t('crm.noResults') : t('crm.noCustomers')}
           </div>
         ) : (
-          {/* Desktop Table */}
-          <div className="hidden lg:block overflow-x-auto">
+          <>
+            {/* Desktop Table */}
+            <div className="hidden lg:block overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b">
@@ -160,6 +161,7 @@ export function CRMSearch({ customers, currency, locale }: CRMSearchProps) {
               </Card>
             ))}
           </div>
+          </>
         )}
       </CardContent>
     </Card>
