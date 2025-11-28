@@ -5,16 +5,6 @@ import type { NextRequest } from 'next/server'
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
   
-  // Verificar que las variables de entorno estén configuradas
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    // Si no están configuradas, permitir acceso a la página de setup y login
-    if (req.nextUrl.pathname === '/setup' || req.nextUrl.pathname === '/auth/login' || req.nextUrl.pathname === '/') {
-      return res
-    }
-    // Redirigir a setup si intenta acceder a otras rutas
-    return NextResponse.redirect(new URL('/setup', req.url))
-  }
-
   const supabase = createMiddlewareClient({ req, res })
 
   const {
