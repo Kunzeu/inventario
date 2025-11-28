@@ -165,7 +165,7 @@ export default function SettingsPage() {
                 <p className="text-xs text-red-500 mt-1">{t('validation.emailMinLength')}</p>
               )}
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">{t('settings.currency')}</label>
                 <select

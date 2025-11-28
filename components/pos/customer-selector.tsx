@@ -5,9 +5,8 @@ import { createSupabaseClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Search, X, User } from 'lucide-react'
+import { Search, User, XCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import toast from 'react-hot-toast'
 
 interface Customer {
   id: string
@@ -19,66 +18,50 @@ interface Customer {
 
 interface CustomerSelectorProps {
   customerId: string | null
-  onCustomerSelect: (customerId: string | null) => void
+  onCustomerSelect: (id: string | null) => void
 }
 
 export function CustomerSelector({ customerId, onCustomerSelect }: CustomerSelectorProps) {
   const { t } = useTranslation()
   const supabase = createSupabaseClient()
   const [searchTerm, setSearchTerm] = useState('')
-  const [customers, setCustomers] = useState<Customer[]>([])
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
+  const [searchResults, setSearchResults] = useState<Customer[]>([])
   const [showResults, setShowResults] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
 
   useEffect(() => {
     if (customerId) {
-      loadCustomer(customerId)
+      loadSelectedCustomer(customerId)
     } else {
       setSelectedCustomer(null)
     }
   }, [customerId])
 
-  useEffect(() => {
-    if (searchTerm.length >= 2) {
-      searchCustomers()
-    } else {
-      setCustomers([])
-      setShowResults(false)
-    }
-  }, [searchTerm])
-
-  const loadCustomer = async (id: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('customers')
-        .select('id, name, email, phone, loyalty_points')
-        .eq('id', id)
-        .eq('is_active', true)
-        .single()
-
-      if (error) throw error
-      if (data) setSelectedCustomer(data)
-    } catch (error: any) {
-      console.error('Error loading customer:', error)
+  const loadSelectedCustomer = async (id: string) => {
+    const { data } = await supabase
+      .from('customers')
+      .select('id, name, email, phone, loyalty_points')
+      .eq('id', id)
+      .eq('is_active', true)
+      .single()
+    if (data) {
+      setSelectedCustomer(data)
     }
   }
 
-  const searchCustomers = async () => {
+  const searchCustomers = async (term: string) => {
     setLoading(true)
     try {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('customers')
         .select('id, name, email, phone, loyalty_points')
+        .or(`name.ilike.%${term}%,email.ilike.%${term}%,phone.ilike.%${term}%`)
         .eq('is_active', true)
-        .or(`name.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%,phone.ilike.%${searchTerm}%`)
         .limit(10)
-
-      if (error) throw error
-      setCustomers(data || [])
+      
+      setSearchResults(data || [])
       setShowResults(true)
-    } catch (error: any) {
-      toast.error(error.message || t('customers.errorSearching'))
     } finally {
       setLoading(false)
     }
@@ -120,7 +103,7 @@ export function CustomerSelector({ customerId, onCustomerSelect }: CustomerSelec
                   )}
                   <div className="flex items-center gap-4 mt-1">
                     <span className="text-xs text-blue-600">
-                      {t('customers.loyaltyPoints')}: <strong>{selectedCustomer.loyalty_points || 0}</strong>
+                      {t('customers.loyaltyPoints')}: <strong>{selectedCustomer.loyalty_points || 0} {t('pos.points')}</strong>
                     </span>
                     {calculateDiscount(selectedCustomer.loyalty_points || 0) > 0 && (
                       <span className="text-xs text-green-600">
@@ -135,53 +118,57 @@ export function CustomerSelector({ customerId, onCustomerSelect }: CustomerSelec
               size="sm"
               variant="ghost"
               onClick={handleClearCustomer}
-              className="ml-2"
+              className="text-blue-600 hover:bg-blue-100"
             >
-              <X className="w-4 h-4" />
+              <XCircle className="w-4 h-4 mr-1" />
+              {t('common.clear')}
             </Button>
           </div>
         </Card>
       ) : (
         <div className="relative">
-          <div className="flex items-center space-x-2">
-            <Search className="w-4 h-4 text-gray-400 absolute left-3" />
-            <Input
-              type="text"
-              placeholder={t('pos.searchCustomer')}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
+          <Input
+            placeholder={t('pos.searchCustomer')}
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+              if (e.target.value.length > 2) {
+                searchCustomers(e.target.value)
+              } else {
+                setShowResults(false)
+                setSearchResults([])
+              }
+            }}
+            onFocus={() => searchTerm.length > 2 && setShowResults(true)}
+            onBlur={() => setTimeout(() => setShowResults(false), 100)}
+            className="pr-10"
+          />
+          <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           
-          {showResults && customers.length > 0 && (
-            <Card className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto">
-              <CardContent className="p-2">
-                {customers.map((customer) => (
-                  <button
+          {showResults && searchResults.length > 0 && (
+            <Card className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto shadow-lg">
+              <CardContent className="p-0">
+                {searchResults.map((customer) => (
+                  <Button
                     key={customer.id}
-                    onClick={() => handleSelectCustomer(customer)}
-                    className="w-full text-left p-2 hover:bg-gray-100 rounded flex items-center justify-between"
+                    variant="ghost"
+                    className="w-full justify-start text-left p-3 rounded-none"
+                    onMouseDown={() => handleSelectCustomer(customer)}
                   >
+                    <User className="w-4 h-4 mr-2 text-gray-500" />
                     <div>
-                      <p className="font-medium text-sm">{customer.name}</p>
-                      {customer.email && (
-                        <p className="text-xs text-gray-500">{customer.email}</p>
-                      )}
+                      <p className="font-medium">{customer.name}</p>
+                      {customer.email && <p className="text-xs text-gray-500">{customer.email}</p>}
                     </div>
-                    <span className="text-xs text-blue-600">
-                      {customer.loyalty_points || 0} {t('customers.points')}
-                    </span>
-                  </button>
+                  </Button>
                 ))}
               </CardContent>
             </Card>
           )}
-
-          {showResults && searchTerm.length >= 2 && customers.length === 0 && !loading && (
-            <Card className="absolute z-10 w-full mt-1">
-              <CardContent className="p-4 text-center text-gray-500 text-sm">
-                {t('customers.noCustomersFound')}
+          {showResults && searchResults.length === 0 && !loading && searchTerm.length > 2 && (
+            <Card className="absolute z-10 w-full mt-1 shadow-lg">
+              <CardContent className="p-3 text-center text-gray-500">
+                {t('pos.noCustomersFound')}
               </CardContent>
             </Card>
           )}

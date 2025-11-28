@@ -290,10 +290,10 @@ export default function POSPage() {
 
   return (
     <MainLayout>
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-gray-900">{t('pos.title')}</h1>
+      <div className="space-y-4 md:space-y-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('pos.title')}</h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
           {/* Productos */}
           <div className="lg:col-span-2 space-y-4">
             <Card>
@@ -308,7 +308,7 @@ export default function POSPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-[600px] overflow-y-auto">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 gap-2 sm:gap-4 max-h-[400px] sm:max-h-[600px] overflow-y-auto">
                   {filteredProducts.map((product) => (
                     <button
                       key={product.id}
@@ -347,36 +347,43 @@ export default function POSPage() {
                   <>
                     <div className="space-y-2 max-h-[400px] overflow-y-auto">
                       {cart.map((item) => (
-                        <div key={item.product_id} className="flex items-center justify-between p-3 border rounded-lg">
-                          <div className="flex-1">
-                            <p className="font-medium text-sm">{item.name}</p>
-                            <p className="text-xs text-gray-500">{formatCurrency(item.price, currency)} c/u</p>
+                        <div key={item.product_id} className="p-3 border rounded-lg space-y-2">
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-sm truncate">{item.name}</p>
+                              <p className="text-xs text-gray-500">{formatCurrency(item.price, currency)} c/u</p>
+                            </div>
+                            <div className="ml-2 font-bold text-sm">{formatCurrency(item.total, currency)}</div>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => updateQuantity(item.product_id, -1)}
-                            >
-                              <Minus className="w-3 h-3" />
-                            </Button>
-                            <span className="w-8 text-center">{item.quantity}</span>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => updateQuantity(item.product_id, 1)}
-                            >
-                              <Plus className="w-3 h-3" />
-                            </Button>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => updateQuantity(item.product_id, -1)}
+                                className="h-8 w-8 p-0"
+                              >
+                                <Minus className="w-3 h-3" />
+                              </Button>
+                              <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => updateQuantity(item.product_id, 1)}
+                                className="h-8 w-8 p-0"
+                              >
+                                <Plus className="w-3 h-3" />
+                              </Button>
+                            </div>
                             <Button
                               size="sm"
                               variant="destructive"
                               onClick={() => removeFromCart(item.product_id)}
+                              className="h-8 w-8 p-0"
                             >
                               <Trash2 className="w-3 h-3" />
                             </Button>
                           </div>
-                          <div className="ml-4 font-bold">{formatCurrency(item.total, currency)}</div>
                         </div>
                       ))}
                     </div>
@@ -407,7 +414,7 @@ export default function POSPage() {
                       <select
                         value={paymentMethod}
                         onChange={(e) => {
-                          setPaymentMethod(e.target.value)
+                          setPaymentMethod(e.target.value as 'cash' | 'card' | 'transfer')
                           if (e.target.value !== 'cash') {
                             setCashReceived('')
                           }
@@ -425,26 +432,22 @@ export default function POSPage() {
                         <label className="block text-sm font-medium">{t('pos.cashReceived')}</label>
                         <Input
                           type="number"
-                          step="0.01"
                           value={cashReceived}
                           onChange={(e) => setCashReceived(e.target.value)}
-                          placeholder="0.00"
+                          placeholder="0"
                           className="w-full"
                         />
-                        {cashReceived && parseFloat(cashReceived) >= totals.total && (
-                          <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                            <div className="flex justify-between items-center">
-                              <span className="font-medium text-green-800">{t('pos.change')}:</span>
-                              <span className="text-xl font-bold text-green-800">
-                                {formatCurrency(parseFloat(cashReceived) - totals.total, currency)}
-                              </span>
-                            </div>
+                        {cashReceived && Number(cashReceived) >= totals.total && (
+                          <div className="p-2 bg-green-50 border border-green-200 rounded-md">
+                            <p className="text-sm text-green-800">
+                              {t('pos.change')}: {formatCurrency(Number(cashReceived) - totals.total, currency)}
+                            </p>
                           </div>
                         )}
-                        {cashReceived && parseFloat(cashReceived) < totals.total && (
-                          <div className="p-2 bg-red-50 border border-red-200 rounded-lg">
+                        {cashReceived && Number(cashReceived) < totals.total && (
+                          <div className="p-2 bg-red-50 border border-red-200 rounded-md">
                             <p className="text-sm text-red-800">
-                              {t('pos.insufficientCash')}: {formatCurrency(totals.total - parseFloat(cashReceived), currency)}
+                              {t('pos.insufficientCash')}: {formatCurrency(totals.total - Number(cashReceived), currency)}
                             </p>
                           </div>
                         )}
@@ -453,10 +456,11 @@ export default function POSPage() {
 
                     <Button
                       onClick={handleCheckout}
+                      disabled={loading || cart.length === 0 || (paymentMethod === 'cash' && (!cashReceived || Number(cashReceived) < totals.total))}
                       className="w-full"
-                      disabled={loading || cart.length === 0 || (paymentMethod === 'cash' && (!cashReceived || parseFloat(cashReceived) < totals.total))}
+                      size="lg"
                     >
-                      {loading ? t('common.loading') : t('pos.checkout')}
+                      {loading ? t('common.loading') : t('pos.completeSale')}
                     </Button>
                   </>
                 )}

@@ -57,7 +57,7 @@ export default async function CRMPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-gray-900">{t('crm.title')}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('crm.title')}</h1>
 
         <CRMSearch 
           customers={crmData.customers} 

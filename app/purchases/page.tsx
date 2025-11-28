@@ -43,10 +43,10 @@ export default async function PurchasesPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">{t('purchases.title')}</h1>
-          <Link href="/purchases/new">
-            <Button>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('purchases.title')}</h1>
+          <Link href="/purchases/new" className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto">
               <Plus className="w-4 h-4 mr-2" />
               {t('purchases.newPurchase')}
             </Button>
@@ -58,7 +58,8 @@ export default async function PurchasesPage() {
             <CardTitle>{t('purchases.purchaseHistory')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
+            {/* Desktop Table */}
+            <div className="hidden lg:block overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
@@ -97,6 +98,50 @@ export default async function PurchasesPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="lg:hidden space-y-4">
+              {purchases.map((purchase: any) => (
+                <Card key={purchase.id}>
+                  <CardContent className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-semibold">{purchase.purchase_number}</p>
+                          <p className="text-sm text-gray-500">{formatDate(purchase.created_at, locale)}</p>
+                        </div>
+                        <span className={`px-2 py-1 rounded text-xs ${
+                          purchase.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {purchase.status === 'completed' ? t('sales.completed') : t('sales.pending')}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <span className="text-gray-500">{t('purchases.supplier')}: </span>
+                          <span>{purchase.suppliers?.name || '-'}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">{t('purchases.subtotal')}: </span>
+                          <span>{formatCurrency(Number(purchase.subtotal), currency)}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">{t('purchases.tax')}: </span>
+                          <span>{formatCurrency(Number(purchase.tax), currency)}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">{t('purchases.total')}: </span>
+                          <span className="font-bold">{formatCurrency(Number(purchase.total), currency)}</span>
+                        </div>
+                      </div>
+                      <Link href={`/purchases/${purchase.id}`} className="block">
+                        <Button variant="outline" size="sm" className="w-full">{t('purchases.viewDetails')}</Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </CardContent>
         </Card>

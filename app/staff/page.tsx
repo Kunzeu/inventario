@@ -45,11 +45,11 @@ export default async function StaffPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">{t('staff.title')}</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('staff.title')}</h1>
           {canCreateStaff && (
-            <Link href="/staff/new">
-              <Button>
+            <Link href="/staff/new" className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto">
                 <Plus className="w-4 h-4 mr-2" />
                 {t('staff.addEmployee')}
               </Button>
@@ -62,7 +62,8 @@ export default async function StaffPage() {
             <CardTitle>{t('staff.employeeList')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
+            {/* Desktop Table */}
+            <div className="hidden lg:block overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
@@ -111,6 +112,48 @@ export default async function StaffPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="lg:hidden space-y-4">
+              {staff.map((member) => (
+                <Card key={member.id}>
+                  <CardContent className="p-4">
+                    <div className="space-y-3">
+                      <div>
+                        <p className="font-semibold text-lg">{member.full_name || '-'}</p>
+                        <p className="text-sm text-gray-500">{member.email}</p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="px-2 py-1 rounded text-xs bg-blue-100 text-blue-800">
+                          {member.role}
+                        </span>
+                        <span className={`px-2 py-1 rounded text-xs ${
+                          member.is_active 
+                            ? 'bg-green-100 text-green-800' 
+                            : 'bg-red-100 text-red-800'
+                        }`}>
+                          {member.is_active ? t('staff.active') : t('staff.inactive')}
+                        </span>
+                      </div>
+                      <div>
+                        <EmailStatus userId={member.id} email={member.email} />
+                      </div>
+                      <div className="flex gap-2 pt-2">
+                        <Link href={`/staff/${member.id}/edit`} className="flex-1">
+                          <Button variant="outline" size="sm" className="w-full">{t('common.edit')}</Button>
+                        </Link>
+                        <div className="flex-1">
+                          <DeleteStaffButton 
+                            staffId={member.id} 
+                            staffName={member.full_name || member.email}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </CardContent>
         </Card>

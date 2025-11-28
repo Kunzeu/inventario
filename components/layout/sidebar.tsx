@@ -71,11 +71,11 @@ export function Sidebar() {
   // Evitar renderizar hasta que esté montado (evita error de hidratación)
   if (!mounted || !ready) {
     return (
-      <div className="w-64 bg-gray-900 text-white min-h-screen flex flex-col">
-        <div className="p-6 border-b border-gray-800">
+      <div className="w-64 bg-gray-900 text-white min-h-screen flex flex-col md:min-h-screen">
+        <div className="p-6 border-b border-gray-800 flex-shrink-0">
           <h1 className="text-xl font-bold">Sistema POS</h1>
         </div>
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {menuItems.map((item) => {
             const Icon = item.icon
             const isActive = pathname === item.href
@@ -95,7 +95,7 @@ export function Sidebar() {
             )
           })}
         </nav>
-        <div className="p-4 border-t border-gray-800">
+        <div className="p-4 border-t border-gray-800 flex-shrink-0">
           <div className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 w-full">
             <LogOut className="w-5 h-5" />
             <span className="w-16 h-4 bg-gray-700 rounded animate-pulse" />
@@ -106,11 +106,11 @@ export function Sidebar() {
   }
 
   return (
-    <div className="w-64 bg-gray-900 text-white min-h-screen flex flex-col">
-      <div className="p-6 border-b border-gray-800">
+    <div className="w-64 bg-gray-900 text-white min-h-screen flex flex-col md:min-h-screen">
+      <div className="p-6 border-b border-gray-800 flex-shrink-0">
         <h1 className="text-xl font-bold">Sistema POS</h1>
       </div>
-      <nav className="flex-1 p-4 space-y-2">
+      <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
         {filteredMenuItems.map((item) => {
           const Icon = item.icon
           const isActive = pathname === item.href
@@ -131,7 +131,7 @@ export function Sidebar() {
           )
         })}
       </nav>
-      <div className="p-4 border-t border-gray-800">
+      <div className="p-4 border-t border-gray-800 flex-shrink-0">
         <button
           onClick={handleLogout}
           className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 hover:text-white w-full"

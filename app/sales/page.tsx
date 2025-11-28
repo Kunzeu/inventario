@@ -61,10 +61,10 @@ export default async function SalesPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">{t('sales.title')}</h1>
-          <Link href="/pos">
-            <Button>{t('sales.newSale')}</Button>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('sales.title')}</h1>
+          <Link href="/pos" className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto">{t('sales.newSale')}</Button>
           </Link>
         </div>
 
@@ -73,7 +73,8 @@ export default async function SalesPage() {
             <CardTitle>{t('sales.saleHistory')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
+            {/* Desktop Table */}
+            <div className="hidden lg:block overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
@@ -117,6 +118,55 @@ export default async function SalesPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="lg:hidden space-y-4">
+              {sales.map((sale: any) => (
+                <Card key={sale.id}>
+                  <CardContent className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-semibold">{sale.sale_number}</p>
+                          <p className="text-sm text-gray-500">{formatDate(sale.created_at, locale)}</p>
+                        </div>
+                        <span className={`px-2 py-1 rounded text-xs ${
+                          sale.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {sale.status === 'completed' ? t('sales.completed') : t('sales.pending')}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <span className="text-gray-500">{t('sales.customer')}: </span>
+                          <span>{sale.customers?.name || t('sales.generalCustomer')}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">{t('sales.seller')}: </span>
+                          <span>{sale.users?.full_name || '-'}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">{t('sales.paymentMethod')}: </span>
+                          <span>
+                            {sale.payment_method === 'cash' ? t('pos.cash') :
+                             sale.payment_method === 'card' ? t('pos.card') :
+                             sale.payment_method === 'transfer' ? t('pos.transfer') :
+                             sale.payment_method}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">{t('sales.total')}: </span>
+                          <span className="font-bold">{formatCurrency(Number(sale.total), currency)}</span>
+                        </div>
+                      </div>
+                      <Link href={`/sales/${sale.id}`} className="block">
+                        <Button variant="outline" size="sm" className="w-full">{t('sales.viewDetails')}</Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </CardContent>
         </Card>

@@ -57,9 +57,9 @@ export default async function InventoryPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-gray-900">{t('inventory.title')}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('inventory.title')}</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">{t('inventory.lowStock')}</CardTitle>
@@ -96,7 +96,8 @@ export default async function InventoryPage() {
             <CardTitle>{t('inventory.lowStock')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
@@ -129,6 +130,42 @@ export default async function InventoryPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="md:hidden space-y-4">
+              {inventoryData.lowStock.map((product) => (
+                <Card key={product.id}>
+                  <CardContent className="p-4">
+                    <div className="space-y-2">
+                      <div>
+                        <p className="font-semibold">{product.name}</p>
+                        <p className="text-sm text-gray-500">{product.sku}</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <span className="text-gray-500">{t('inventory.currentStock')}: </span>
+                          <span className={Number(product.stock) <= 0 ? 'text-red-600 font-bold' : 'text-yellow-600 font-bold'}>
+                            {product.stock}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">{t('inventory.minStock')}: </span>
+                          <span>{product.min_stock}</span>
+                        </div>
+                        <div className="col-span-2">
+                          <span className="text-gray-500">{t('inventory.status')}: </span>
+                          {Number(product.stock) <= 0 ? (
+                            <span className="text-red-600">{t('inventory.outOfStockStatus')}</span>
+                          ) : (
+                            <span className="text-yellow-600">{t('inventory.lowStockStatus')}</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </CardContent>
         </Card>

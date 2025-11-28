@@ -174,10 +174,10 @@ export default async function ReportsPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-gray-900">{t('reports.title')}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('reports.title')}</h1>
 
         {/* Estadísticas Generales */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">{t('reports.totalRevenue')}</CardTitle>

@@ -35,10 +35,10 @@ export default async function SuppliersPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">{t('suppliers.title')}</h1>
-          <Link href="/suppliers/new">
-            <Button>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('suppliers.title')}</h1>
+          <Link href="/suppliers/new" className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto">
               <Plus className="w-4 h-4 mr-2" />
               {t('suppliers.addSupplier')}
             </Button>
@@ -50,7 +50,7 @@ export default async function SuppliersPage() {
             <CardTitle>{t('suppliers.supplierList')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {suppliers.map((supplier) => (
                 <div key={supplier.id} className="p-4 border rounded-lg">
                   <h3 className="font-bold text-lg">{supplier.name}</h3>

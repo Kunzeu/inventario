@@ -74,7 +74,8 @@ export function CRMSearch({ customers, currency, locale }: CRMSearchProps) {
             {searchTerm ? t('crm.noResults') : t('crm.noCustomers')}
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          {/* Desktop Table */}
+          <div className="hidden lg:block overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b">
@@ -114,6 +115,50 @@ export function CRMSearch({ customers, currency, locale }: CRMSearchProps) {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="lg:hidden space-y-4">
+            {filteredCustomers.map((customer) => (
+              <Card key={customer.id}>
+                <CardContent className="p-4">
+                  <div className="space-y-3">
+                    <div>
+                      <p className="font-semibold text-lg">{customer.name}</p>
+                      {customer.email && <p className="text-sm text-gray-500">{customer.email}</p>}
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <span className="text-gray-500">{t('crm.purchases')}: </span>
+                        <span className="font-semibold">{customer.purchaseCount}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">{t('crm.totalSpent')}: </span>
+                        <span className="font-bold">{formatCurrency(customer.totalSpent, currency)}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">{t('crm.lastPurchase')}: </span>
+                        <span>
+                          {customer.lastPurchase 
+                            ? new Date(customer.lastPurchase).toLocaleDateString(locale)
+                            : t('crm.never')
+                          }
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">{t('crm.loyaltyPoints')}: </span>
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          {customer.loyalty_points || 0} {t('customers.points')}
+                        </span>
+                      </div>
+                    </div>
+                    <Link href={`/customers/${customer.id}`} className="block">
+                      <Button variant="outline" size="sm" className="w-full">{t('customers.viewDetails')}</Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         )}
       </CardContent>

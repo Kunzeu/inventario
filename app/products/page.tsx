@@ -52,11 +52,11 @@ export default async function ProductsPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">{t('products.title')}</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('products.title')}</h1>
           {canCreateProducts && (
             <Link href="/products/new">
-              <Button>
+              <Button className="w-full sm:w-auto">
                 <Plus className="w-4 h-4 mr-2" />
                 {t('products.addProduct')}
               </Button>
@@ -69,7 +69,8 @@ export default async function ProductsPage() {
             <CardTitle>{t('products.productList')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
@@ -109,6 +110,50 @@ export default async function ProductsPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="md:hidden space-y-4">
+              {products.map((product) => (
+                <Card key={product.id}>
+                  <CardContent className="p-4">
+                    <div className="space-y-3">
+                      <div>
+                        <p className="font-semibold text-lg">{product.name}</p>
+                        <p className="text-sm text-gray-500">{product.sku}</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <span className="text-gray-500">{t('products.category')}: </span>
+                          <span>{product.categories?.name || '-'}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">{t('products.price')}: </span>
+                          <span className="font-semibold">{formatCurrency(Number(product.price), currency)}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">{t('products.stock')}: </span>
+                          <span className={Number(product.stock) <= Number(product.min_stock) ? 'text-red-600 font-bold' : 'font-semibold'}>
+                            {product.stock}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex gap-2 pt-2">
+                        {canEditProducts && (
+                          <Link href={`/products/${product.id}`} className="flex-1">
+                            <Button variant="outline" size="sm" className="w-full">{t('common.edit')}</Button>
+                          </Link>
+                        )}
+                        {canDeleteProducts && (
+                          <div className="flex-1">
+                            <DeleteProductButton productId={product.id} productName={product.name} />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </CardContent>
         </Card>
