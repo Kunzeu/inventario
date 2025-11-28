@@ -25,9 +25,9 @@ export async function POST(request: Request) {
     }
 
     const wcService = new WooCommerceService({
-      storeUrl,
-      consumerKey,
-      consumerSecret,
+      store_url: storeUrl,
+      consumer_key: consumerKey,
+      consumer_secret: consumerSecret,
     })
 
     // Intentar obtener productos para verificar la conexión

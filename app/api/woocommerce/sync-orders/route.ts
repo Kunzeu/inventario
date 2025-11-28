@@ -30,9 +30,9 @@ export async function POST(request: Request) {
     }
 
     const wcService = new WooCommerceService({
-      storeUrl: connection.store_url,
-      consumerKey: connection.consumer_key,
-      consumerSecret: connection.consumer_secret,
+      store_url: connection.store_url,
+      consumer_key: connection.consumer_key,
+      consumer_secret: connection.consumer_secret,
     })
 
     let synced = 0
