@@ -325,6 +325,7 @@
     "tax": "Tax",
     "total": "Total",
     "checkout": "Checkout",
+    "completeSale": "Complete Sale",
     "emptyCart": "Cart is empty",
     "insufficientStock": "Insufficient stock",
     "saleCompleted": "Sale completed successfully",

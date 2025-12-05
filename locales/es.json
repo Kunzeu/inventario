@@ -325,6 +325,7 @@
     "tax": "IVA",
     "total": "Total",
     "checkout": "Realizar Venta",
+    "completeSale": "Completar Venta",
     "emptyCart": "El carrito está vacío",
     "insufficientStock": "No hay suficiente stock",
     "saleCompleted": "Venta realizada exitosamente",

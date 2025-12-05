@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createSupabaseClient } from '@/lib/supabase/client'
+import { useDebounce } from '@/lib/hooks/use-debounce'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -30,6 +31,8 @@ export function CustomerSelector({ customerId, onCustomerSelect }: CustomerSelec
   const [loading, setLoading] = useState(false)
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
+
   useEffect(() => {
     if (customerId) {
       loadSelectedCustomer(customerId)
@@ -37,6 +40,15 @@ export function CustomerSelector({ customerId, onCustomerSelect }: CustomerSelec
       setSelectedCustomer(null)
     }
   }, [customerId])
+
+  useEffect(() => {
+    if (debouncedSearchTerm.length > 2) {
+      searchCustomers(debouncedSearchTerm)
+    } else {
+      setShowResults(false)
+      setSearchResults([])
+    }
+  }, [debouncedSearchTerm])
 
   const loadSelectedCustomer = async (id: string) => {
     const { data } = await supabase
@@ -59,7 +71,7 @@ export function CustomerSelector({ customerId, onCustomerSelect }: CustomerSelec
         .or(`name.ilike.%${term}%,email.ilike.%${term}%,phone.ilike.%${term}%`)
         .eq('is_active', true)
         .limit(10)
-      
+
       setSearchResults(data || [])
       setShowResults(true)
     } finally {
@@ -89,7 +101,7 @@ export function CustomerSelector({ customerId, onCustomerSelect }: CustomerSelec
   return (
     <div className="space-y-2">
       <label className="block text-sm font-medium">{t('pos.customer')}</label>
-      
+
       {selectedCustomer ? (
         <Card className="p-3 bg-blue-50 border-blue-200">
           <div className="flex items-center justify-between">
@@ -132,19 +144,13 @@ export function CustomerSelector({ customerId, onCustomerSelect }: CustomerSelec
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value)
-              if (e.target.value.length > 2) {
-                searchCustomers(e.target.value)
-              } else {
-                setShowResults(false)
-                setSearchResults([])
-              }
             }}
             onFocus={() => searchTerm.length > 2 && setShowResults(true)}
             onBlur={() => setTimeout(() => setShowResults(false), 100)}
             className="pr-10"
           />
           <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          
+
           {showResults && searchResults.length > 0 && (
             <Card className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto shadow-lg">
               <CardContent className="p-0">

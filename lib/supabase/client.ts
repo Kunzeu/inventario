@@ -1,8 +1,13 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { createClient } from '@supabase/supabase-js'
 
+let client: ReturnType<typeof createClientComponentClient> | undefined
+
 export const createSupabaseClient = () => {
-  return createClientComponentClient()
+  if (client) return client
+
+  client = createClientComponentClient()
+  return client
 }
 
 // Cliente directo solo si las variables están configuradas
