@@ -15,17 +15,28 @@ export async function POST(request: Request) {
 
     const supabaseAdmin = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      serviceRoleKey
+      serviceRoleKey,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      }
     )
 
-    // Buscar usuario por email
-    const { data: users, error: searchError } = await supabaseAdmin.auth.admin.listUsers({
-      email
-    })
-    if (searchError || !users || users.users.length === 0) {
+    // Buscar usuario por email - listUsers no acepta filtro por email
+    // Primero obtener todos los usuarios y filtrar
+    const { data: allUsers, error: searchError } = await supabaseAdmin.auth.admin.listUsers()
+    
+    if (searchError) {
+      return NextResponse.json({ error: searchError.message }, { status: 500 })
+    }
+    
+    const user = allUsers.users.find(u => u.email === email)
+    
+    if (!user) {
       return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 })
     }
-    const user = users.users[0]
 
     // Cambiar contraseña
     const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(user.id, {
