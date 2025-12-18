@@ -23,7 +23,6 @@ async function getDashboardData() {
   const todayRevenue = todaySales?.reduce((sum, sale) => sum + Number(sale.total), 0) || 0
   const todaySalesCount = todaySales?.length || 0
 
-  // Obtener todos los productos activos
   const { data: allProducts } = await supabase
     .from('products')
     .select('id, name, stock, min_stock')

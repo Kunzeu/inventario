@@ -124,7 +124,7 @@ export default function POSPage() {
   const handleCustomerSelect = async (id: string | null) => {
     setCustomerId(id)
     if (id) {
-      // Cargar información completa del cliente
+
       const { data } = await supabase
         .from('customers')
         .select('id, name, email, phone, loyalty_points')
@@ -146,7 +146,6 @@ export default function POSPage() {
       return
     }
 
-    // Validar monto recibido si es efectivo
     if (paymentMethod === 'cash') {
       const received = parseFloat(cashReceived) || 0
       const { total } = calculateTotal()
@@ -190,7 +189,6 @@ export default function POSPage() {
         quantity: Number(item.quantity),
         price: Number(item.price),
         total: Number(item.total)
-        // discount es opcional, no lo incluimos si no hay descuento
       }))
 
       console.log('Intentando insertar sale_items:', saleItems)
@@ -207,9 +205,7 @@ export default function POSPage() {
 
       console.log('Items de venta creados:', insertedItems)
 
-      // Actualizar stock de productos y crear movimientos de stock
       for (const item of cart) {
-        // Obtener el stock actual del producto
         const { data: product, error: productError } = await supabase
           .from('products')
           .select('stock')
@@ -223,7 +219,6 @@ export default function POSPage() {
 
         const newStock = Number(product.stock) - item.quantity
 
-        // Actualizar el stock del producto
         const { error: updateError } = await supabase
           .from('products')
           .update({ stock: newStock })
@@ -254,8 +249,6 @@ export default function POSPage() {
 
       // Actualizar puntos de lealtad si hay cliente
       if (customerId && selectedCustomer) {
-        // Calcular puntos ganados: 1 punto por cada producto comprado (cantidad)
-        // Ejemplo: Si compra 3 unidades del producto A y 2 del producto B = 5 puntos
         const pointsEarned = cart.reduce((sum, item) => sum + item.quantity, 0)
         const newPoints = (selectedCustomer.loyalty_points || 0) + pointsEarned
         

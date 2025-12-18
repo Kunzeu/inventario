@@ -54,7 +54,6 @@ export function Sidebar() {
     setMounted(true)
   }, [])
 
-  // Filtrar items del menú según permisos
   const filteredMenuItems = role && !roleLoading
     ? menuItems.filter(item => {
         const permissions = getPermissions(role as UserRole)
@@ -68,7 +67,6 @@ export function Sidebar() {
     router.refresh()
   }
 
-  // Evitar renderizar hasta que esté montado (evita error de hidratación)
   if (!mounted || !ready) {
     return (
       <div className="w-64 bg-gray-900 text-white min-h-screen flex flex-col md:min-h-screen">

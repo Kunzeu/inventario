@@ -21,7 +21,6 @@ async function getInventoryData() {
   const outOfStock = products?.filter(p => Number(p.stock) <= 0) || []
   const totalValue = products?.reduce((sum, p) => sum + (Number(p.stock) * Number(p.cost || p.price)), 0) || 0
 
-  // Obtener movimientos recientes
   const { data: movements } = await supabase
     .from('stock_movements')
     .select(`

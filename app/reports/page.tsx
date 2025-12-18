@@ -123,7 +123,6 @@ async function getReportsData(locale: string) {
   const totalPurchases = purchases?.length || 0
   const totalPurchaseAmount = purchases?.reduce((sum, p) => sum + Number(p.total), 0) || 0
 
-  // Clientes activos
   const { data: customers } = await supabase
     .from('customers')
     .select('id')
@@ -131,7 +130,6 @@ async function getReportsData(locale: string) {
 
   const totalCustomers = customers?.length || 0
 
-  // Productos activos
   const { data: products } = await supabase
     .from('products')
     .select('id')

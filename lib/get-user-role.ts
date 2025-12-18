@@ -2,35 +2,37 @@ import { createServerSupabaseClient } from './supabase/server'
 
 export async function getUserRole(): Promise<string | null> {
   const supabase = createServerSupabaseClient()
-  const { data: { session } } = await supabase.auth.getSession()
+  // Usar getUser() en lugar de getSession() para mejor confiabilidad
+  const { data: { user } } = await supabase.auth.getUser()
 
-  if (!session) {
+  if (!user) {
     return null
   }
 
-  const { data: user } = await supabase
+  const { data: userData } = await supabase
     .from('users')
     .select('role')
-    .eq('id', session.user.id)
+    .eq('id', user.id)
     .single()
 
-  return user?.role || null
+  return userData?.role || null
 }
 
 export async function getUser() {
   const supabase = createServerSupabaseClient()
-  const { data: { session } } = await supabase.auth.getSession()
+  // Usar getUser() en lugar de getSession() para mejor confiabilidad
+  const { data: { user } } = await supabase.auth.getUser()
 
-  if (!session) {
+  if (!user) {
     return null
   }
 
-  const { data: user } = await supabase
+  const { data: userData } = await supabase
     .from('users')
     .select('id, email, full_name, role, is_active')
-    .eq('id', session.user.id)
+    .eq('id', user.id)
     .single()
 
-  return user
+  return userData
 }
 

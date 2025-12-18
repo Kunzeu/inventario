@@ -12,7 +12,6 @@ export default async function Home() {
       redirect('/dashboard')
     }
   } catch (error) {
-    // Si hay error, redirigir a login
     redirect('/auth/login')
   }
 }

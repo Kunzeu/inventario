@@ -13,19 +13,17 @@ export async function middleware(req: NextRequest) {
   } as any)
 
   const {
-    data: { session },
-  } = await supabase.auth.getSession()
+    data: { user },
+  } = await supabase.auth.getUser()
 
   // Rutas que requieren autenticación
   const protectedRoutes = ['/dashboard', '/pos', '/products', '/inventory', '/sales', '/purchases', '/suppliers', '/customers', '/reports', '/crm', '/staff', '/woocommerce', '/settings']
 
-  // Si no hay sesión y está intentando acceder a una ruta protegida
-  if (!session && protectedRoutes.some(route => req.nextUrl.pathname.startsWith(route))) {
+  if (!user && protectedRoutes.some(route => req.nextUrl.pathname.startsWith(route))) {
     return NextResponse.redirect(new URL('/auth/login', req.url))
   }
 
-  // Si hay sesión y está en la página de login, redirigir al dashboard
-  if (session && req.nextUrl.pathname === '/auth/login') {
+  if (user && req.nextUrl.pathname === '/auth/login') {
     return NextResponse.redirect(new URL('/dashboard', req.url))
   }
 

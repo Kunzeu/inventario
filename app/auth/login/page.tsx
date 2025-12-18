@@ -34,9 +34,14 @@ export default function LoginPage() {
         throw error
       }
 
+      // Esperar un momento para que las cookies se establezcan
+      await new Promise(resolve => setTimeout(resolve, 100))
+      
       toast.success('Inicio de sesión exitoso')
-      router.push('/dashboard')
-      router.refresh()
+      
+      // Usar window.location para forzar una recarga completa
+      // Esto asegura que el middleware tenga las cookies actualizadas
+      window.location.href = '/dashboard'
     } catch (error: any) {
       if (!error.message.includes('Email not confirmed') && !error.message.includes('email_not_confirmed')) {
         toast.error(error.message || 'Error al iniciar sesión')
